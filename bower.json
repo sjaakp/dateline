@@ -1,0 +1,19 @@
+{
+  "name": "dateline",
+  "version": "1.2.0",
+  "homepage": "https://github.com/sjaakp/dateline",
+  "authors": [
+    "Sjaak Priester <sjaak@sjaakpriester.nl>"
+  ],
+  "description": "jQuery widget for date-related data",
+  "main": [
+    "css/jquery.dateline.css",
+    "js/jquery.dateline.js"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": ">=1.8"
+  },
+  "ignore": [
+  ]
+}
