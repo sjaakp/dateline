@@ -102,7 +102,7 @@ In most cases, you would have one normal band at the top with several overview b
 
 #### multiple ####
 
-*Optional*. Sets which scale divisions are displayed. If 2, every other division is displayed. Default is 1, meaning that every division is displayed.
+*Optional*. This value determines which scale divisions are displayed. If it is 2, every other division is displayed. Default value is 1, meaning that every division is displayed.
 
 ## Events ##
 
@@ -160,7 +160,7 @@ In any case, `start` < `post_start` < `pre_stop` < `stop`.
 
 ## Cursor ##
 
-**Dateline**'s timelines are anchored at one time, called the cursor. By means of the option cursor the starting value can be set. Like the event time options, cursor can be a Javascript `Date` object or a string that is recognized by `Date.parse()`.
+**Dateline**'s timelines are anchored at one point in time, called the cursor. By means of the option `cursor` the starting value can be set. Like the event time options, `cursor` can be a Javascript `Date` object or a string that is recognized by `Date.parse()`.
 
 ## Other options ##
 
@@ -179,8 +179,8 @@ In any case, `start` < `post_start` < `pre_stop` < `stop`.
 *Optional*. Sets the way the timelines 'land' after certain operations, like swiping or keyboard operations. Can have the following values:
 
 - `null`: no special handling;
-- `Dateline.MIDDLE`: `cursor` will be in the middle of a division;
-- `Dateline.EDGE`: `cursor` will be on the edge of a division (on a division mark).
+- `Dateline.MIDDLE`: `cursor` will end up in the middle of a division (between division marks);
+- `Dateline.EDGE`: `cursor` will end up on the edge of a division (on a division mark).
 
 The default value is `Dateline.MIDDLE`.
 
