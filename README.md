@@ -1,9 +1,19 @@
 Dateline
 ========
 
-Dateline is a jQuery UI widget for date-related data. You can create interactive timelines, which can be dragged by mouse, touch or keyboard, and displays events. The movements of two or more timelines ('bands') are synchronized. Clicking on an event displays more information or redirects you to another page.
+**Dateline** is a jQuery UI widget for date-related data. You can create interactive timelines, which can be dragged by mouse, touch or keyboard, and displays events. The movements of two or more timelines ('bands') are synchronized. Clicking on an event displays more information or redirects you to another page.
+
+A demo of **Dateline** is [here](http://www.sjaakpriester.nl/software/dateline).
+
+Here is **Dateline**'s  [GitHub page](https://github.com/sjaakp/dateline).
 
 ## Installing ##
+
+Install **Dateline** with [Bower](http://bower.io/):
+
+	bower install dateline
+
+You can also manually install **Dateline** by [downloading the source in ZIP-format](https://github.com/sjaakp/dateline/archive/master.zip).
 
 ## Dependencies ##
 
@@ -15,8 +25,9 @@ Dateline is a jQuery UI widget for date-related data. You can create interactive
 
 ## Usage ##
 
-- Be sure `/css/jquery.dateline.css` is loaded as a stylesheet.
+- Be sure `/dist/jquery.dateline.css` is loaded as a stylesheet.
 - Load the Javascript libraries `underscore.js`, `jquery.js`, `jquery-ui.js` (you probably need some of them on the page anyway).
+- Load `/dist/jquery.dateline.js`.
 - Create a `<div>` with an `id`. 
 - In the document-ready function, encapsulate the `<div>` in a jQuery object, and call the `dateline()` method.
 
@@ -24,7 +35,7 @@ A minimum HTML page with a **Dateline** would look like this:
 
 	<html>
 	<head>
-		<link href="/css/jquery.dateline.css" rel="stylesheet">
+		<link href="/dist/jquery.dateline.css" rel="stylesheet">
 
 	</head>
 	<body>
@@ -34,7 +45,7 @@ A minimum HTML page with a **Dateline** would look like this:
 		<script src=".../underscore.js"></script>
 		<script src=".../jquery.js"></script>
 		<script src=".../jquery-ui.js"></script>
-		<script src="js/jquery.dateline.js"></script>
+		<script src="/dist/jquery.dateline.js"></script>
 
 		<script type="text/javascript">$(document).ready(function () {
 			$('#dl').dateline(/* options */);
