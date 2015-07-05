@@ -199,7 +199,7 @@ var Dateline = {
 
                     elmt.data('id', event.id);
                     if (band.dateline.options.url) {
-                        elmt.click(function(e) {
+                        elmt.on('mousedown touchstart', function(e) {
                             var t = $(e.currentTarget),
                                 dl = band.dateline,
                                 bubble = dl._bubble,
@@ -226,6 +226,10 @@ var Dateline = {
                                     }
                                 );
                             }
+
+                            e.preventDefault();
+                            e.stopPropagation();
+                            return false;
                         }.bind(this));
                     }
 
@@ -373,7 +377,6 @@ var Dateline = {
                 animation = 0;
             }
 
-//            band.dateline.element.focus();
             band.setFocus();
 
             if (evt.targetTouches || evt.which === 1)    {
