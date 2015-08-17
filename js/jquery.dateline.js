@@ -345,11 +345,11 @@ var Dateline = {
      * @constructor
      */
     function Content(band) {
-        var nervous = 0.6, // if higher, dependence of final velocity is higher
-            inertia = 500,     // if higher, kinetic effect is stronger
+        var inertia = 500,     // if higher, kinetic effect is stronger
             slow = 0.1,         // if higher, higher velocity is needed for kinetic effect
             duration = 1500,    // duration of kinetic effect in ms
-            animation = 0;
+            animation = 0,
+            touchId = null;
 
         this.band = band;
         this.element = $('<div>', {class: 'd-content'}).appendTo(band.element);
@@ -371,65 +371,74 @@ var Dateline = {
         this.markers = new Markers(this);
         this.events = new Events(this);
 
-        this.element.on('mousedown touchstart', function(evt)  {
-            var startPos, startMs, prevPos, prevTimeStamp, velocity;
+        this.startPos = 0;
+        this.startMs = 0;
+        this.prevPos = 0;
+        this.prevTimeStamp = 0;
+        this.velocity = 0;
 
-            if (animation) {
-                animation.stop();
-                animation = 0;
+        // touch
+        this.element.on("touchstart", function(e) {
+            e.preventDefault();
+            e = e.originalEvent;
+
+            if (touchId === null)   {   // skip if touch is ongoing (this must be a second or third finger)
+                if (animation) {
+                    animation.stop();
+                    animation = 0;
+                }
+
+                touchId = e.changedTouches[0].identifier;
+                this.initDrag(e, e.changedTouches[0]);
             }
 
-            band.setFocus();
+        }.bind(this)).on("touchmove", function(e) {
+            var i, t;
 
-            if (evt.targetTouches || evt.which === 1)    {
+            e.preventDefault();
+            e = e.originalEvent;
 
-                prevPos = startPos = this.xPos(evt);
-                startMs = this.band.dateline._getCursorMs();
-                prevTimeStamp = evt.timeStamp;
-                velocity = 0;
+            for (i = 0; i < e.changedTouches.length; i++)   {
+                t = e.changedTouches[i];
+                if (t.identifier === touchId)   {
+                    this.updateDrag(e, t);
+                }
+            }
 
-                $(band.dateline.document).on('mousemove.dateline touchmove.dateline', function(evt)  {  // bind more events, using namespace
-                    var x = this.xPos(evt);
+        }.bind(this)).on("touchend", function(e) {
+            var i, t, dl = band.dateline, animStart, target,
+                stepFunc = function(x) { dl._place(x);},    // define functions outside loop to satisfy JsLint
+                completeFunc = function() {
+                    dl._triggerChange();
+                    animation = 0;
+                };
 
+            e.preventDefault();
+            e = e.originalEvent;
 
-                    band.dateline._place(startMs + band.calcMs(startPos - x));
+            for (i = 0; i < e.changedTouches.length; i++)   {
+                t = e.changedTouches[i];
+                if (t.identifier === touchId)   {
+                    this.updateDrag(e, t);
+                    touchId = null;
 
-                    velocity *= 1 - nervous;
-                    velocity += nervous * ((x - prevPos) / (evt.timeStamp - prevTimeStamp));
-                    prevPos = x;
-                    prevTimeStamp = evt.timeStamp;
+                    if (Math.abs(this.velocity) > slow)   {
+                        animStart = dl._getCursorMs();          // inertia
+                        target = new Date(animStart - band.calcMs(inertia * this.velocity));
 
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                    return false;
-
-                }.bind(this)).on('mouseup.dateline touchend.dateline', function(evt)  {
-
-                    var dl = band.dateline, x = this.xPos(evt),
-                        animStart = startMs + band.calcMs(startPos - x),
-                        target = new Date(animStart - band.calcMs(inertia * velocity));
-
-                    $(dl.document).off('.dateline');
-
-                    if (Math.abs(velocity) > slow)   {
                         band.roundDate(target);
 
                         animation = $({ x: animStart });
                         animation.animate({x: target.getTime() }, {
-                            step: function(x) {
-                                dl._place(x);
-                            },
+                            step: stepFunc,
                             duration: duration,
                             easing: 'easeOutExpo',
-                            complete: function()    {
-                                dl._triggerChange();
-                                animation = 0;
-                            }
+                            complete: completeFunc
                         });
                     }
                     else    {
-                        if (Math.abs(x - startPos) < 4) {   // we hardly moved, it's a click, go to click point
-                            target = new Date(this.visible.begin.getTime() + band.calcMs(startPos - band.element.offset().left));
+                        if (Math.abs(this.prevPos - this.startPos) < 4) {   // we hardly moved, it's a tap, go to tap point
+                            target = new Date(this.visible.begin.getTime() + band.calcMs(this.startPos - band.element.offset().left));
                             band.roundDate(target);
                             dl._animateTo(target.getTime());
                         }
@@ -437,20 +446,69 @@ var Dateline = {
                             dl._triggerChange();
                         }
                     }
+                }
+            }
+
+            // mouse
+        }.bind(this)).mousedown(function(evt)  {
+
+            if (evt.which === 1)    {
+                evt.preventDefault();
+
+                if (animation) {
+                    animation.stop();
+                    animation = 0;
+                }
+
+                band.setFocus();
+
+                this.initDrag(evt, evt);
+
+                $(band.dateline.document).on('mousemove.dateline', function(evt)  {  // bind event to document, using namespace
+                    evt.preventDefault();
+                    this.updateDrag(evt, evt);
+
+                }.bind(this)).on('mouseup.dateline', function(evt)  {
+                    var dl = band.dateline, target;
 
                     evt.preventDefault();
-                    evt.stopPropagation();
-                    return false;
-                }.bind(this));
 
-                evt.preventDefault();
-                evt.stopPropagation();
-                return false;
+                    $(dl.document).off('.dateline');    // unbind document events
+                    this.updateDrag(evt, evt);
+
+                    if (Math.abs(this.prevPos - this.startPos) < 4) {   // we hardly moved, it's a click, go to click point
+                        target = new Date(this.visible.begin.getTime() + band.calcMs(this.startPos - band.element.offset().left));
+                        band.roundDate(target);
+                        dl._animateTo(target.getTime());
+                    }
+                    else    {
+                        dl._triggerChange();
+                    }
+                }.bind(this));
             }
         }.bind(this));
     }
 
     Content.prototype = {
+
+        initDrag: function(e, t)    {
+            this.prevPos = this.startPos = t.pageX;
+            this.startMs = this.band.dateline._getCursorMs();
+            this.prevTimeStamp = e.timeStamp;
+            this.velocity = 0;
+        },
+
+        updateDrag: function(e, t)  {
+            var nervous = 0.6, // if higher, dependence of final velocity is higher
+                x = t.pageX;
+
+            this.band.dateline._place(this.startMs + this.band.calcMs(this.startPos - x));
+
+            this.velocity *= 1 - nervous;
+            this.velocity += nervous * ((x - this.prevPos) / (e.timeStamp - this.prevTimeStamp));
+            this.prevPos = x;
+            this.prevTimeStamp = e.timeStamp;
+        },
 
         xPos: function(e)   {
             return (e.targetTouches && e.targetTouches.length >= 1) ? e.targetTouches[0].clientX : e.clientX;
@@ -652,87 +710,9 @@ var Dateline = {
             e.preventDefault();
         }.bind(this));
 
-        this.keyInput = $('<input>', {
-            class: 'd-input',
-            type: 'text'
-        }).focus(function(e) {
-            this.dateline._focus = this.index;
-            this.leftIndicator.show();
-            this.rightIndicator.show();
-        }.bind(this)).blur(function(e) {
-            this.leftIndicator.hide();
-            this.rightIndicator.hide();
-        }.bind(this)).keydown(function(e) {
-            var current = dl._getCursorMs(),
-                events, i, prev = true;
-
-            if (prev)   {
-                switch (e.keyCode) {
-                    case 9:     // tab
-                        events = dl.options.events;
-                        if (events.length)  {
-                            if (e.shiftKey) {
-                                i = _.sortedIndex(events, { start: current - 1 }, function(v) {
-                                    return v.start;
-                                });
-                                if (i > 0) {
-                                    dl._animateTo(events[i - 1].start);
-                                }
-                            }
-                            else    {
-                                i = _.sortedIndex(events, { start: current + 1 }, function(v) {
-                                    return v.start;
-                                });
-                                if (i < events.length) {
-                                    dl._animateTo(events[i].start);
-                                }
-                            }
-                        }
-                        break;
-/*                  // Nothing wrong with this code, just seems a little bit too much.
-                    case 33: // page up
-                        dl._animateTo(current + 10 * this.ms);
-                        break;
-                    case 34: // page down
-                        dl._animateTo(current - 10 * this.ms);
-                        break;
-*/
-                    case 35: // end
-                        if (dl.options.end)   {
-                            dl._animateTo(dl.options.end.getTime());
-                        }
-                        break;
-                    case 36: // home
-                        if (dl.options.begin)   {
-                            dl._animateTo(dl.options.begin.getTime());
-                        }
-                        break;
-                    case 37: // left arrow
-                        this.stepLeft(e.shiftKey);
-                        break;
-                    case 38: // up arrow
-                        dl._cycleFocus(-1);
-                        break;
-                    case 39: // right arrow
-                        this.stepRight(e.shiftKey);
-                        break;
-                    case 40: // down arrow
-                        dl._cycleFocus(1);
-                        break;
-                    default:
-                        prev = false;
-                        break;
-                }
-                if (prev)    {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            }
-            return ! prev;
-        }.bind(this));
-
         this.element = $('<div>', {
-            class: 'd-band d-band-' + this.index + ' d-scale-' + this.scale
+            class: 'd-band d-band-' + this.index + ' d-scale-' + this.scale,
+            tabindex: '0'
         }).height(this.size).append(
             this.keyInput,
             this.before,
@@ -744,7 +724,84 @@ var Dateline = {
         this.element.append(
             this.leftIndicator,
             this.rightIndicator
-        );
+        ).focus(function(e) {
+            this.dateline._focus = this.index;
+            this.leftIndicator.show();
+            this.rightIndicator.show();
+        }.bind(this)).blur(function(e) {
+            this.leftIndicator.hide();
+            this.rightIndicator.hide();
+        }.bind(this)).keydown(function(e) {
+                var current = dl._getCursorMs(),
+                    events, i, prev = true;
+
+                if (prev)   {
+                    switch (e.keyCode) {
+                        case 9:     // tab
+                            events = dl.options.events;
+                            if (events.length)  {
+                                if (e.shiftKey) {
+                                    i = _.sortedIndex(events, { start: current - 1 }, function(v) {
+                                        return v.start;
+                                    });
+                                    if (i > 0) {
+                                        dl._animateTo(events[i - 1].start);
+                                    }
+                                }
+                                else    {
+                                    i = _.sortedIndex(events, { start: current + 1 }, function(v) {
+                                        return v.start;
+                                    });
+                                    if (i < events.length) {
+                                        dl._animateTo(events[i].start);
+                                    }
+                                }
+                            }
+                            break;
+                        // Nothing wrong with this code, just seems a little bit too much.
+/*
+                        case 33: // page up
+                            dl._animateTo(current + 10 * this.ms);
+                            break;
+                        case 34: // page down
+                            dl._animateTo(current - 10 * this.ms);
+                            break;
+*/
+
+                        case 35: // end
+                            if (dl.options.end)   {
+                                dl._animateTo(dl.options.end.getTime());
+                            }
+                            break;
+                        case 36: // home
+                            if (dl.options.begin)   {
+                                dl._animateTo(dl.options.begin.getTime());
+                            }
+                            break;
+                        case 37: // left arrow
+                            this.stepLeft(e.shiftKey);
+                            break;
+                        case 38: // up arrow
+                            dl._cycleFocus(-1);
+                            break;
+                        case 39: // right arrow
+                            this.stepRight(e.shiftKey);
+                            break;
+                        case 40: // down arrow
+                            dl._cycleFocus(1);
+                            break;
+                        default:
+                            prev = false;
+                            break;
+                    }
+                    if (prev)    {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }
+                return ! prev;
+
+            }.bind(this));
     }
 
     Band.prototype = {
@@ -784,7 +841,7 @@ var Dateline = {
         },
 
         setFocus: function()   {
-            this.keyInput.focus();
+            this.element.focus();
         },
 
         stepLeft: function(big) {

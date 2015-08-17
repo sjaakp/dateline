@@ -1,5 +1,5 @@
 @charset "utf-8";
-
+/* 9-12-2014, 12:03 */
 .d-dateline {
   position: relative;
   -webkit-box-sizing: border-box;
@@ -7,6 +7,10 @@
   box-sizing: border-box;
   background-color: #dad4c8;
   text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .d-bubble {
   display: none;
@@ -38,6 +42,7 @@
 }
 .d-band {
   position: relative;
+  outline: none;
   background-color: #bcb19a;
 }
 .d-band .d-range {

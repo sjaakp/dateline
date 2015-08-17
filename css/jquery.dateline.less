@@ -68,6 +68,10 @@
   box-sizing: border-box;
   background-color: @band-0-col;
   text-align: center;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .d-bubble {
@@ -104,6 +108,7 @@
 
 .d-band {
   position: relative;
+  outline: none;
   .def-band(@band-col);
 }
 
