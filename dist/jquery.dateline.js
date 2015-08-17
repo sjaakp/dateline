@@ -2,8 +2,8 @@
 /*jslint nomen: true, unparam: true, white: true, plusplus: true, todo: true */
 /**
  * MIT licence
- * Version 1.2.1
- * Sjaak Priester, Amsterdam 13-06-2014 ... 31-07-2015.
+ * Version 1.2.2
+ * Sjaak Priester, Amsterdam 13-06-2014 ... 17-08-2015.
  *
  */
 
