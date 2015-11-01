@@ -2,8 +2,8 @@
 /*jslint nomen: true, unparam: true, white: true, plusplus: true, todo: true */
 /**
  * MIT licence
- * Version 1.2.2
- * Sjaak Priester, Amsterdam 13-06-2014 ... 17-08-2015.
+ * Version 1.2.3
+ * Sjaak Priester, Amsterdam 13-06-2014 ... 01-11-2015.
  *
  */
 
@@ -210,7 +210,8 @@ var Dateline = {
                                     left: post.left + contentPos.left
                                 },
                                 id = t.data('id'),
-                                url = dl.options.url + '?' + $.param({id: id});
+                                url = dl.options.url + id;
+//                                url = dl.options.url + '?' + $.param({id: id});
 
                             e.preventDefault();
                             e.stopPropagation();

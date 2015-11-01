@@ -25,9 +25,9 @@ You can also manually install **Dateline** by [downloading the source in ZIP-for
 
 ## Usage ##
 
-- Be sure `/dist/jquery.dateline.css` is loaded as a stylesheet.
+- Be sure `/css/jquery.dateline.css` is loaded as a stylesheet.
 - Load the Javascript libraries `underscore.js`, `jquery.js`, `jquery-ui.js` (you probably need some of them on the page anyway).
-- Load `/dist/jquery.dateline.js`.
+- Load `/js/jquery.dateline.js`.
 - Create a `<div>` with an `id`. 
 - In the document-ready function, encapsulate the `<div>` in a jQuery object, and call the `dateline()` method.
 
@@ -35,7 +35,7 @@ A minimum HTML page with a **Dateline** would look like this:
 
 	<html>
 	<head>
-		<link href="/dist/jquery.dateline.css" rel="stylesheet">
+		<link href="/css/jquery.dateline.css" rel="stylesheet">
 
 	</head>
 	<body>
@@ -45,7 +45,7 @@ A minimum HTML page with a **Dateline** would look like this:
 		<script src=".../underscore.js"></script>
 		<script src=".../jquery.js"></script>
 		<script src=".../jquery-ui.js"></script>
-		<script src="/dist/jquery.dateline.js"></script>
+		<script src="/js/jquery.dateline.js"></script>
 
 		<script type="text/javascript">$(document).ready(function () {
 			$('#dl').dateline(/* options */);
@@ -96,7 +96,7 @@ This sets the scale division of the band. It can have one of the following value
 - `Dateline.CENTURY`
 - `Dateline.MILLENNIUM`
 
-Yes, **Dateline**'s range is truly astonishing: from milliseconds to millennia.
+(Yes, **Dateline**'s range is truly astonishing: from milliseconds to millennia.)
 
 #### size ####
 
@@ -197,7 +197,7 @@ The default value is `Dateline.MIDDLE`.
 
 #### url ####
 
-*Optional*. The url **Dateline** uses when an event is clicked. The url is concatenated with parameter `id`, which gets the value of the `id` property of the clicked event.
+*Optional*. The url **Dateline** uses when an event is clicked. The url is concatenated with the value of the `id` property of the clicked event.
 
 If `false` (default), clicking on an event has no effect.
 
