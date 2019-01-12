@@ -2,8 +2,8 @@
 /*jslint nomen: true, unparam: true, white: true, plusplus: true, todo: true */
 /**
  * MIT licence
- * Version 1.2.3
- * Sjaak Priester, Amsterdam 13-06-2014 ... 01-11-2015.
+ * Version 1.2.4
+ * Sjaak Priester, Amsterdam 13-06-2014 ... 12-01-2019.
  *
  */
 
@@ -1136,7 +1136,8 @@ var Dateline = {
         },
 
         find: function(id) {
-            var found = _.find(this.options.events, function(v) { return v.id === id; });
+            // use == in stead of === to find string key in case v.id is integer
+            var found = _.find(this.options.events, function(v) { return v.id == id; });
             if (found)  {
                 this._animateTo(found.start.getTime());
             }
