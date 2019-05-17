@@ -171,7 +171,7 @@ In any case, `start` < `post_start` < `pre_stop` < `stop`.
 
 ## Cursor ##
 
-**Dateline**'s timelines are anchored at one point in time, called the cursor. By means of the option `cursor` the starting value can be set. Like the event time options, `cursor` can be a Javascript `Date` object or a string that is recognized by `Date.parse()`.
+**Dateline**'s timelines are anchored at one point in time, called the *cursor*. By means of the option `cursor` the starting value can be set. Like the event time options, `cursor` can be a Javascript `Date` object or a string that is recognized by `Date.parse()`.
 
 ## Other options ##
 
