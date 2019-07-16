@@ -12,6 +12,11 @@
   -ms-user-select: none;
   user-select: none;
 }
+.d-dateline * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
 .d-bubble {
   display: none;
   position: absolute;
