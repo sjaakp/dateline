@@ -1,0 +1,420 @@
+@import "colors";
+
+$tint: #908060;
+$dark-tint: #2f4f4f; //#483d8b;
+
+$col-step: 15%;
+$dim-step: 40%;
+
+$bc: scale_color($tint, $lightness: 40%); // darkest background color
+$band-colors: $bc;
+
+$bc-dark:  scale_color($dark-tint, $lightness: - 30%); // lightest background color
+$dark-band-colors: $bc-dark;
+
+@for $i from 1 to 5 {
+  $band-colors: join(scale_color($bc, $lightness: $i * $col-step), $band-colors);
+  $dark-band-colors: join(scale_color($bc-dark, $lightness: - $i * $col-step), $dark-band-colors);
+}
+
+$event-col: darkslateblue;
+$dark-event-col: lightgreen;
+
+.d-dateline {
+  $bcol: scale_color($event-col, $lightness: $dim-step);
+  --fa-primary-color:  #{$event-col};
+  --fa-secondary-color: #{$event-col};
+  --d-border-color: #{$bcol};
+  min-height: 80px;
+  background-color: nth($band-colors, 1);
+  position: relative;
+  box-sizing: border-box;
+  text-align: center;
+  user-select: none;
+  outline: none;
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.d-hidden {
+  display: none;
+}
+
+.d-bubble {
+  position: absolute;
+  text-align: left;
+  width: 240px;
+  background-color: #fff;
+  border: 1px solid scale-color($tint, $lightness: 40%);
+  border-radius: 12px;
+  margin-top: 24px;
+  margin-left: -20px;
+}
+
+.d-close  {
+  float: right;
+  margin: 0 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: scale-color($tint, $lightness: 40%);
+  &:hover {
+    color: scale-color($tint, $lightness: 40%);
+  }
+}
+
+.d-info {
+  margin: 1em;
+}
+
+.d-inner  {
+  height: 100%;
+  overflow: hidden;
+  outline: none;
+}
+
+.d-band {
+  position: relative;
+  text-align: left;
+  outline: none;
+}
+
+@for $i from 0 to length($band-colors)  {
+  .d-band-#{$i} {
+    $bcol: nth($band-colors, $i + 1);
+    background-color: $bcol;
+    .d-range {
+      background-color: scale-color($bcol, $lightness: 30%);
+    }
+    .d-indicator {
+      color: scale-color($bcol, $lightness: 25%);
+      &:hover {
+        color: scale-color($bcol, $lightness: 40%);
+      }
+    }
+  }
+}
+
+.d-range {
+  $bcol: scale_color($tint, $lightness: 20%);
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  &.d-before  {
+    right: 50%;
+    border-right: 1px dotted $bcol;
+  }
+  &.d-after  {
+    left: 50%;
+    border-left: 1px dotted $bcol;
+  }
+}
+
+.d-content  {
+  position: absolute;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.d-markers, .d-events  {
+  position: absolute;
+  width: 100%;
+}
+
+.d-markers {
+  height: 30px;
+  bottom: 0;
+}
+
+.d-events {
+  height: 100%;
+}
+
+.d-marker {
+  position: absolute;
+  font-family: sans-serif;
+  font-size: 12px;
+  line-height: 12px;
+  padding-top: 18px;
+  padding-left: 2px;
+  border-left: 1px dotted;
+  color: $tint;
+  &.d-plus  {
+    font-size: 14px;
+    font-weight: bold;
+    border-left-style: solid;
+    color: scale_color($tint, $lightness: -20%);
+  }
+}
+
+.d-limit {
+  position: absolute;
+  width: 60px;
+  height: 100%;
+  &.d-begin {
+    background: linear-gradient(to left,  rgba(144,128,96,.2) 0%,rgba(0,0,0,0) 100%);
+  }
+  &.d-end {
+    background: linear-gradient(to right,  rgba(144,128,96,.2) 0%,rgba(0,0,0,0) 100%);
+  }
+}
+
+.d-event,
+.d-tape-event {
+  position: absolute;
+  padding-right: 2.5em; // defines minimal distance between events on same line
+  max-width: 30em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.d-event {
+  &:before  {
+    display: inline-block;
+    width: .8em;
+    height: .8em;
+    border-radius: 50%;
+    content: '';
+    color: var(--fa-primary-color);
+    background-color: currentColor;
+    margin-right: .2em;
+  }
+}
+
+.d-tape-event {
+  padding-bottom: 3px;
+}
+
+.d-tape {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  background-color: var(--fa-primary-color);
+  border-color: var(--d-border-color);
+  border-width: 0;
+  border-style: solid;
+}
+
+.d-pin  {
+  position: absolute;
+  top: 30%;
+  width: 1px;
+  height: 6px;
+  background-color: var(--fa-primary-color);
+}
+
+.d-tape-pin  {
+  position: absolute;
+  top: 30%;
+  height: 2px;
+  background-color: var(--fa-primary-color);
+}
+
+.d-indicator {
+  $marg: 12px;
+  position: absolute;;
+  top: 30%;
+  cursor: pointer;
+  &:after {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    font-size: 6px;
+    border-style: solid;
+    border-color: transparent;
+    color: rgba(255, 255, 255, 0.5); //scale-color(nth($band-colors, 1), $lightness: 20%);;
+  }
+  &:hover:after {
+      color: #fff;
+  }
+  &.d-left {
+    left: $marg;
+    &:after {
+      border-right-color: unset;
+      border-width: 1em 2em 1em 0;
+    }
+  }
+  &.d-right {
+    right: $marg + 12px;
+    &:after {
+      border-left-color: unset;
+      border-width: 1em 0 1em 2em;
+    }
+  }
+}
+
+.d-dark {
+  &.d-dateline {
+    $bcol: scale_color($dark-event-col, $lightness: - $dim-step);
+    --fa-primary-color:  #{$dark-event-col};
+    --fa-secondary-color: #{$dark-event-col};
+    --d-border-color: #{$bcol};
+    background-color: nth($dark-band-colors, 1);
+  }
+  .d-bubble {
+    background-color: #000;
+  }
+  @for $i from 0 to length($dark-band-colors)  {
+    .d-band-#{$i} {
+      $bcol: nth($dark-band-colors, $i + 1);
+      background-color: $bcol;
+      .d-range {
+        background-color: scale-color($bcol, $lightness: - 30%);
+      }
+      .d-indicator {
+        color: scale-color($bcol, $lightness: - 25%);
+        &:hover {
+          color: scale-color($bcol, $lightness: - 40%);
+        }
+      }
+    }
+  }
+  .d-range  {
+    border-color: scale_color($tint, $lightness: 20%);
+  }
+  .d-plus {
+    color: scale_color($tint, $lightness: 20%);
+  }
+}
+
+.d-event  {
+  &.fa,
+  &.fab,
+  &.fad,
+  &.fal,
+  &.far,
+  &.fas {
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    &:before  {
+      display: inline-block;
+      position: relative;
+      background-color: transparent !important;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      width: auto;
+      height: auto;
+    }
+  }
+  &.fa,
+  &.fab,
+  &.fal,
+  &.far,
+  &.fas {
+    &:before  {
+      font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+    }
+  }
+  &.fal:before {
+    font-weight: 300;
+  }
+  &.far:before {
+    font-weight: 400;
+  }
+  &.fa:before,
+  &.fas:before {
+    font-weight: 900;
+  }
+  &.fab:before {
+    font-family: "Font Awesome 5 Brands";
+    font-weight: 400;
+  }
+  &.fad {
+    position: absolute;
+    &:after {
+      display: inline-block;
+      background-color: transparent !important;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      position: absolute;
+      left: 0;
+    }
+    &:before,
+    &:after {
+      font-family: "Font Awesome 5 Duotone";
+      font-weight: 900;
+    }
+  }
+  &[class*="fa-rotate-"],
+  &[class*="fa-flip-"] {
+    transform: none;
+  }
+  &.fa-rotate-90:before,
+  &.fa-rotate-90:after {
+    transform: rotate(90deg);
+  }
+  &.fa-rotate-180:before,
+  &.fa-rotate-180:after {
+    transform: rotate(180deg);
+  }
+  &.fa-rotate-270:before,
+  &.fa-rotate-270:after {
+    transform: rotate(270deg);
+  }
+  &.fa-flip-horizontal:before,
+  &.fa-flip-horizontal:after {
+    transform: scaleX(-1);
+  }
+  &.fa-flip-vertical:before,
+  &.fa-flip-vertical:after {
+    transform: scaleY(-1);
+  }
+  &.fa-flip-both:before,
+  &.fa-flip-both:after {
+    transform: scale(-1, -1);
+  }
+}
+
+.d-tape-event {
+  &.fa,
+  &.fab,
+  &.fad,
+  &.fal,
+  &.far,
+  &.fas {
+    font-family: inherit;
+    font-weight: inherit;
+    &:before {
+      content: none !important;
+    }
+  }
+}
+
+[class*="col2-"]  {
+  --fa-secondary-opacity: 1;
+}
+
+.d-hilight  {
+  .d-tape,
+  &:before,
+  &:after {
+    filter: invert(80%);
+  }
+}
+
+@each $cols in $colors {
+  $col: nth($cols, 1);
+  $bcol: scale_color($col, $lightness: $dim-step);
+  //$inv: invert($col);
+  $cls: ();
+  $cls2: ();
+  @each $c in $cols {
+    $cls: append($cls, ".col-" + #{$c}, $separator: comma);
+    $cls2: append($cls2, ".col2-" + #{$c}, $separator: comma);
+  }
+  #{$cls} {
+    --fa-primary-color: #{$col};
+    --fa-secondary-color: #{$col};
+    --d-border-color: #{$bcol};
+  }
+  #{$cls2}  {
+    --fa-secondary-color: #{$col};
+  }
+}

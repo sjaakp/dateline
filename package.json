@@ -1,30 +1,40 @@
 {
   "name": "@sjaakp/dateline",
-  "version": "1.2.5",
-  "description": "Timeline widget",
-  "browser": "./js/jquery.dateline.min.js",
+  "version": "2.0.0",
+  "description": "Interactive widget for date-related data",
+  "browser": "./dist/dateline.js",
   "files": [
-    "css/jquery.dateline.css",
-    "js/*"
+    "dist/*"
   ],
   "scripts": {
+    "prepare": "rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "github:sjaakp/dateline",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjaakp/dateline.git"
+  },
   "keywords": [
     "widget",
     "timeline"
   ],
   "author": "Sjaak Priester <sjaak@sjaakpriester.nl> (https://sjaakpriester.nl)",
-  "bugs": {
-    "url": "https://github.com/sjaakp/dateline/issues",
-    "email": "sjaak@sjaakpriester.nl"
-  },
-  "homepage": "https://www.sjaakpriester.nl/software/dateline",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sjaakp/dateline/issues"
+  },
+  "homepage": "https://github.com/sjaakp/dateline#readme",
+  "devDependencies": {
+    "animejs": "^3.0.1",
+    "rollup": "^1.17.0",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-cleanup": "^3.1.1",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sass": "^1.2.2",
+    "rollup-plugin-terser": "^5.1.1"
+  },
   "dependencies": {
-    "jquery": "^3.0.0",
-    "jquery-ui": "^1.1.0",
-    "underscore": "^1.7.0"
   }
 }
