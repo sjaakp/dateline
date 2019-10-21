@@ -41,7 +41,7 @@ const hlprs = [
         loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
         floor: function(date, multiple)  {
             let v = date.getMinutes();
-            date.setMiMinutes(v - v % multiple, 0, 0);
+            date.setMinutes(v - v % multiple, 0, 0);
         },
         incr: function(date, multiple)  {
             date.setMinutes(date.getMinutes() + multiple, 0, 0);
