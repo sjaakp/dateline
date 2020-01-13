@@ -1,10 +1,10 @@
 
-import resolve from 'rollup-plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
-import json from 'rollup-plugin-json';
-import buble from 'rollup-plugin-buble';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import buble from '@rollup/plugin-buble';
 import sass from 'rollup-plugin-sass';
-import {terser} from "rollup-plugin-terser";
+import {terser} from 'rollup-plugin-terser';
 import {version} from './package.json';
 
 const appName = 'Dateline';

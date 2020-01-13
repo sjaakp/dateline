@@ -6,7 +6,10 @@ which can be dragged by mouse, touch or keyboard, and displays events.
 The movements of two or more timelines ('bands') are synchronized. 
 Clicking on or tapping an event displays more information or redirects you to another page.
 
-A demo of **Dateline** is [here](http://www.sjaakpriester.nl/software/dateline).
+A demo of **Dateline** is [here](https://sjaakpriester.nl/software/dateline).
+
+See it in action at [Moordatlas.nl](https://moordatlas.nl/event/dateline) (Dutch).
+At *Weltliteratur* is another [nice example](https://vossanto.weltliteratur.net/timeline/).
 
 Here is **Dateline**'s  [GitHub page](https://github.com/sjaakp/dateline).
 
