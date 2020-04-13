@@ -1,6 +1,6 @@
 /*
- * Dateline 2.0.0
- * (c) 2019 Sjaak Priester, Amsterdam
+ * Dateline 2.0.3
+ * (c) 2019-2020 Sjaak Priester, Amsterdam
  * MIT License
  * https://github.com/sjaakp/dateline
  * https://sjaakpriester.nl
@@ -24,6 +24,26 @@ export const YEAR = 7;
 export const DECADE = 8;
 export const CENTURY = 9;
 export const MILLENNIUM = 10;
+
+// @link https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+function storageAvailable(type) {
+    var storage;
+    try {
+        storage = window[type];
+        var x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    }
+    catch(e) {
+        return e instanceof DOMException && (
+            e.code === 22 ||
+            e.code === 1014 ||
+            e.name === 'QuotaExceededError' ||
+            e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            (storage && storage.length !== 0);
+    }
+}
 
 const defaults = {
     size: '320px',
@@ -57,7 +77,7 @@ export function Widget(id, options)
         if (this.settings[p]) this['_' + p] = createDate(this.settings[p]);
     });
 
-    if (this.settings.rememberCursor)   {
+    if (this.settings.rememberCursor && storageAvailable('sessionStorage'))   {
         // get cursor out of session storage, if available
         let ses = parseInt(window.sessionStorage.getItem('dateline_' + this.id), 10);
         if (ses) this._cursor.setTime(ses);
@@ -218,7 +238,9 @@ Widget.prototype = {
             bubbles: true,
             detail: new Date(this._cursor)
         } ));
-        window.sessionStorage.setItem('dateline_' + this.id, this._cursor.getTime());  // cursor into session storage
+        if (storageAvailable('sessionStorage')) {
+            window.sessionStorage.setItem('dateline_' + this.id, this._cursor.getTime());  // cursor into session storage
+        }
     },
 
     find: function(id) {

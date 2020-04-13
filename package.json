@@ -1,6 +1,6 @@
 {
   "name": "@sjaakp/dateline",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Interactive widget for date-related data",
   "browser": "./dist/dateline.js",
   "files": [
@@ -33,7 +33,7 @@
     "rollup": "^1.27.14",
     "rollup-plugin-cleanup": "^3.1.1",
     "rollup-plugin-sass": "^1.2.2",
-    "rollup-plugin-terser": "^5.1.1"
+    "rollup-plugin-terser": ">=5.2.0"
   },
   "dependencies": {}
 }

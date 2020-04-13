@@ -83,7 +83,7 @@ Content.prototype = {
 
     calcRange: function()   {
         let c = this.center.getTime(),  // center date in millisecs
-            tau = this.band.calcMs(this.width) / 2, // half range in pixels
+            tau = this.band.calcMs(this.width) / 2, // half rangeBox in pixels
             tauSafe = 2 * tau / 3;
 
         this.range.begin.setTime(c - tau);
@@ -105,7 +105,7 @@ Content.prototype = {
             - (this.width - ww) / 2);
 
         c = cursor.getTime();
-        tau = this.band.calcMs(ww) / 2; // half range in msec
+        tau = this.band.calcMs(ww) / 2; // half rangeBox in msec
         this.visible.begin.setTime(c - tau);
         this.visible.end.setTime(c + tau);
     },

@@ -53,7 +53,7 @@ A minimum HTML page with a **Dateline** would look something like this:
 
 ## CDN ##
 
-**Dateline** is available on the **unpkg** Content Delivery Network, so you
+**Dateline** is available on the **unpkg** BandContent Delivery Network, so you
 don't have to host the `dateline` files on your own server. In this case,
 the minimum HTML page looks like this:
 
