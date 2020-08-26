@@ -245,6 +245,12 @@ in a pop up 'bubble' near the event.
 
 Default is `false`.
 
+#### func ####
+
+*Optional*. The function **Dateline** uses when an event is clicked or tapped. 
+The function is called with the clicked event and should return HTML
+that is displayed in a pop up 'bubble' near the event.
+
 ## Property ##
 
 #### cursor #####

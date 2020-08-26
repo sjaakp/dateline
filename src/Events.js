@@ -91,7 +91,7 @@ Events.prototype = {
 
                 elmt.title = ttl;
 
-                if (this.widget.settings.url)   {
+                if (this.widget.settings.url || this.widget.settings.func)   {
                     ['touchstart', 'touchend', 'mousedown'].forEach( p => {
                         elmt.addEventListener(p, e => {
                             e.stopPropagation();    // prevent that Content handles event
@@ -99,32 +99,40 @@ Events.prototype = {
                     });
 
                     elmt.addEventListener('click', e => {
-                        let url = this.widget.settings.url + e.target.dataset.id;
-
                         this.widget.hilight(e.target);
-                        if (this.widget.settings.redirect) {
-                            window.location = url;
-                        }
-                        else    {
+
+			// redirect to new page
+			if (this.widget.settings.url && this.widget.settings.redirect) {
+                            window.location = this.widget.settings.url + e.target.dataset.id;
+			} else {
+			    // show info bubble
                             let rect = this.band.element.getBoundingClientRect();
                             let pos = {
                                 top: e.clientY - e.offsetY - rect.y,
                                 left: e.clientX - e.offsetX - rect.x
                             };
 
-                            let bub = this.widget.bubble,
-                                request = new XMLHttpRequest();
+                            let bub = this.widget.bubble;
 
-                            bub.show(pos).setInfo(this.widget.settings.loading);
+			    bub.show(pos).setInfo(this.widget.settings.loading);
 
-                            request.open('GET', url, true);
+			    if (this.widget.settings.url) {
+				// fill it with data via AJAX
+				let url = this.widget.settings.url + e.target.dataset.id,
+				    request = new XMLHttpRequest();
 
-                            request.onloadend = function() {
-                                if (this.status >= 200 && this.status < 400) {
-                                    bub.setInfo(this.response);
-                                }
-                            };
-                            request.send();
+				request.open('GET', url, true);
+
+				request.onloadend = function() {
+                                    if (this.status >= 200 && this.status < 400) {
+					bub.setInfo(this.response);
+                                    }
+				};
+				request.send();
+			    } else {
+				// fill it with data from function
+				bub.setInfo(this.widget.settings.func(event));
+			    }
                         }
                     });
                 }
