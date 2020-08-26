@@ -10,152 +10,6 @@ import Content from './Content';
 import {createDiv, hideElement, setPixels, showElement} from "./utils";
 import anime from 'animejs/lib/anime.es.js'; // https://animejs.com/
 
-const hlprs = [
-    {   // 0, MILLISECOND
-        ms: 1,
-        big: 10,
-        loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
-        floor: function(date, multiple)  {
-            let v = date.getMilliseconds();
-            date.setMilliseconds(v - v % multiple);
-        },
-        incr: function(date, multiple)  {
-            date.setMilliseconds(date.getMilliseconds() + multiple);
-        },
-    },
-    {   // 1, SECOND
-        ms: 1000,
-        big: 10,
-        loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
-        floor: function(date, multiple)  {
-            let v = date.getSeconds();
-            date.setSeconds(v - v % multiple, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setSeconds(date.getSeconds() + multiple, 0);
-        },
-    },
-    {   // 2, MINUTE, 60 secs
-        ms: 60000,
-        big: 10,
-        loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
-        floor: function(date, multiple)  {
-            let v = date.getMinutes();
-            date.setMinutes(v - v % multiple, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setMinutes(date.getMinutes() + multiple, 0, 0);
-        },
-    },
-    {   // 3, HOUR, 3600 secs
-        ms: 3600000,
-        big: 10,
-        loc: { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' },
-        floor: function(date, multiple)  {
-            let v = date.getHours();
-            date.setHours(v - v % multiple, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setHours(date.getHours() + multiple, 0, 0, 0);
-        },
-    },
-    {   // 4, DAY, 24 hours = 86,400 secs
-        ms: 86400000,
-        big: 7,
-        loc: { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit' },
-        floor: function(date, multiple)  {
-            const ms = 86400000;
-            let v = date.getTime() / ms;   // days since 01-01-1970
-            date.setTime((v - v % multiple) * ms);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setDate(date.getDate() + multiple);
-        },
-    },
-    {   // 5, WEEK, 7 days = 604,800 secs
-        ms: 604800000,
-        big: 10,
-        loc: { year: 'numeric', month: 'long', day: 'numeric' },
-        floor: function(date, multiple)  {
-            const ms = 604800000;
-            let v = date.getTime();
-            v -= 345600000;            // 4 days; set to sunday (01-01-1970 is thursday
-            v /= ms;                   // weeks since 01-01-1970
-            date.setTime((v - v % multiple) * ms);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setDate(date.getDate() + 7 * multiple);
-        },
-    },
-    {   // 6, MONTH, 1/12 year = 2,629,743.75 secs
-        ms: 2629743750,
-        big: 12,
-        loc: { year: 'numeric', month: 'long', day: 'numeric' },
-        floor: function(date, multiple)  {
-            let v = date.getMonth();
-            date.setMonth(v - v % multiple, 1);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setMonth(date.getMonth() + multiple, 1);
-        },
-    },
-    {   // 7, YEAR, 365.2421875 days = 31,556,925 secs
-        ms: 31556925000,
-        big: 10,
-        loc: { year: 'numeric', month: 'long', day: 'numeric' },
-        floor: function(date, multiple)  {
-            let v = date.getFullYear();
-            date.setFullYear(v - v % multiple, 0, 1);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setFullYear(date.getFullYear() + multiple, 0, 1);
-        },
-    },
-    {   // 8, DECADE, 10 years
-        ms: 315569250000,
-        big: 10,
-        loc: { year: 'numeric', month: 'long', day: 'numeric' },
-        floor: function(date, multiple)  {
-            let v = date.getFullYear();
-            date.setFullYear(v - v % (10 * multiple), 0, 1);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setFullYear(date.getFullYear() + 10 * multiple, 0, 1);
-        },
-    },
-    {   // 9, CENTURY, 100 years
-        ms: 3155692500000,
-        big: 10,
-        loc: { year: 'numeric', month: 'numeric' },
-        floor: function(date, multiple)  {
-            let v = date.getFullYear();
-            date.setFullYear(v - v % (100 * multiple), 0, 1);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setFullYear(date.getFullYear() + 100 * multiple, 0, 1);
-        },
-    },
-    {   // 10, MILLENNIUM, 1000 years
-        ms: 31556925000000,
-        big: 10,
-        loc: { year: 'numeric', month: 'numeric' },
-        floor: function(date, multiple)  {
-            let v = date.getFullYear();
-            date.setFullYear(v - v % (1000 * multiple), 0, 1);
-            date.setHours(0, 0, 0, 0);
-        },
-        incr: function(date, multiple)  {
-            date.setFullYear(date.getFullYear() + 1000 * multiple, 0, 1);
-        },
-    },
-];
-
 let scope, clientX, clientY,
     touchId, posX, velo, timeStamp,
     animation = 0;
@@ -274,10 +128,10 @@ export default function Band(widget, bandInfo, index)
     this.index = index;
     Object.assign(this, { multiple: 1}, bandInfo);
 
-    this.helpers = hlprs[this.scale];
+    // this.helpers = this.helpFuncs[this.scale];
 
-    this.before = createDiv('d-range', 'd-before');
-    this.after = createDiv('d-range', 'd-after');
+    this.before = createDiv('d-rangeBox', 'd-before');
+    this.after = createDiv('d-rangeBox', 'd-after');
 
     this.leftIndicator = createDiv('d-indicator', 'd-left', 'd-hidden');
     this.leftIndicator.addEventListener('mousedown', e => {
@@ -371,6 +225,16 @@ export default function Band(widget, bandInfo, index)
 }
 
 Band.prototype = {
+    get scale()
+    {
+        return this._scale;
+    },
+
+    set scale(val)
+    {
+        this._scale = val;
+        this.helpers = this._helpers[val];
+    },
 
     setWidth: function(w)   {
         this.content.setWidth(w);
@@ -452,5 +316,151 @@ Band.prototype = {
     click: function(x)   {
         let rect = this.element.getBoundingClientRect();
         this.animateTo(this.content.visible.begin.getTime() + this.calcMs(x - rect.x));
-    }
+    },
+
+    _helpers: [
+        {   // 0, MILLISECOND
+            ms: 1,
+            big: 10,
+            loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
+            floor: function(date, multiple)  {
+                let v = date.getMilliseconds();
+                date.setMilliseconds(v - v % multiple);
+            },
+            incr: function(date, multiple)  {
+                date.setMilliseconds(date.getMilliseconds() + multiple);
+            },
+        },
+        {   // 1, SECOND
+            ms: 1000,
+            big: 10,
+            loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
+            floor: function(date, multiple)  {
+                let v = date.getSeconds();
+                date.setSeconds(v - v % multiple, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setSeconds(date.getSeconds() + multiple, 0);
+            },
+        },
+        {   // 2, MINUTE, 60 secs
+            ms: 60000,
+            big: 10,
+            loc: { hour: '2-digit', minute: '2-digit', second: '2-digit' },
+            floor: function(date, multiple)  {
+                let v = date.getMinutes();
+                date.setMinutes(v - v % multiple, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setMinutes(date.getMinutes() + multiple, 0, 0);
+            },
+        },
+        {   // 3, HOUR, 3600 secs
+            ms: 3600000,
+            big: 10,
+            loc: { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' },
+            floor: function(date, multiple)  {
+                let v = date.getHours();
+                date.setHours(v - v % multiple, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setHours(date.getHours() + multiple, 0, 0, 0);
+            },
+        },
+        {   // 4, DAY, 24 hours = 86,400 secs
+            ms: 86400000,
+            big: 7,
+            loc: { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit' },
+            floor: function(date, multiple)  {
+                const ms = 86400000;
+                let v = date.getTime() / ms;   // days since 01-01-1970
+                date.setTime((v - v % multiple) * ms);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setDate(date.getDate() + multiple);
+            },
+        },
+        {   // 5, WEEK, 7 days = 604,800 secs
+            ms: 604800000,
+            big: 10,
+            loc: { year: 'numeric', month: 'long', day: 'numeric' },
+            floor: function(date, multiple)  {
+                const ms = 604800000;
+                let v = date.getTime();
+                v -= 345600000;            // 4 days; set to sunday (01-01-1970 is thursday
+                v /= ms;                   // weeks since 01-01-1970
+                date.setTime((v - v % multiple) * ms);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setDate(date.getDate() + 7 * multiple);
+            },
+        },
+        {   // 6, MONTH, 1/12 year = 2,629,743.75 secs
+            ms: 2629743750,
+            big: 12,
+            loc: { year: 'numeric', month: 'long', day: 'numeric' },
+            floor: function(date, multiple)  {
+                let v = date.getMonth();
+                date.setMonth(v - v % multiple, 1);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setMonth(date.getMonth() + multiple, 1);
+            },
+        },
+        {   // 7, YEAR, 365.2421875 days = 31,556,925 secs
+            ms: 31556925000,
+            big: 10,
+            loc: { year: 'numeric', month: 'long', day: 'numeric' },
+            floor: function(date, multiple)  {
+                let v = date.getFullYear();
+                date.setFullYear(v - v % multiple, 0, 1);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setFullYear(date.getFullYear() + multiple, 0, 1);
+            },
+        },
+        {   // 8, DECADE, 10 years
+            ms: 315569250000,
+            big: 10,
+            loc: { year: 'numeric', month: 'long', day: 'numeric' },
+            floor: function(date, multiple)  {
+                let v = date.getFullYear();
+                date.setFullYear(v - v % (10 * multiple), 0, 1);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setFullYear(date.getFullYear() + 10 * multiple, 0, 1);
+            },
+        },
+        {   // 9, CENTURY, 100 years
+            ms: 3155692500000,
+            big: 10,
+            loc: { year: 'numeric', month: 'numeric' },
+            floor: function(date, multiple)  {
+                let v = date.getFullYear();
+                date.setFullYear(v - v % (100 * multiple), 0, 1);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setFullYear(date.getFullYear() + 100 * multiple, 0, 1);
+            },
+        },
+        {   // 10, MILLENNIUM, 1000 years
+            ms: 31556925000000,
+            big: 10,
+            loc: { year: 'numeric', month: 'numeric' },
+            floor: function(date, multiple)  {
+                let v = date.getFullYear();
+                date.setFullYear(v - v % (1000 * multiple), 0, 1);
+                date.setHours(0, 0, 0, 0);
+            },
+            incr: function(date, multiple)  {
+                date.setFullYear(date.getFullYear() + 1000 * multiple, 0, 1);
+            },
+        },
+    ]
 };

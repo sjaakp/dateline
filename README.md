@@ -6,7 +6,10 @@ which can be dragged by mouse, touch or keyboard, and displays events.
 The movements of two or more timelines ('bands') are synchronized. 
 Clicking on or tapping an event displays more information or redirects you to another page.
 
-A demo of **Dateline** is [here](http://www.sjaakpriester.nl/software/dateline).
+A demo of **Dateline** is [here](https://sjaakpriester.nl/software/dateline).
+
+See it in action at [Moordatlas.nl](https://moordatlas.nl/event/dateline) (Dutch).
+At *Weltliteratur* is another [nice example](https://vossanto.weltliteratur.net/timeline/).
 
 Here is **Dateline**'s  [GitHub page](https://github.com/sjaakp/dateline).
 
@@ -50,7 +53,7 @@ A minimum HTML page with a **Dateline** would look something like this:
 
 ## CDN ##
 
-**Dateline** is available on the **unpkg** Content Delivery Network, so you
+**Dateline** is available on the **unpkg** BandContent Delivery Network, so you
 don't have to host the `dateline` files on your own server. In this case,
 the minimum HTML page looks like this:
 

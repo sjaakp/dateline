@@ -40,14 +40,14 @@ Events.prototype = {
 
         this.topMargin = (this.element.clientHeight - this.nLines * this.widget.lineHeight) / 2;
 
-        for (i = 0; i < iBegin; i++)    {       // render Duration Events if they stop after range.begin
+        for (i = 0; i < iBegin; i++)    {       // render Duration Events if they stop after rangeBox.begin
             ev = events[i];
             if (ev.stop && ev.stop > range.begin)   {
                 this.renderEvent(ev);
             }
         }
 
-        for (i = iBegin; i < iEnd; i++) {       // render all Events if start is within range
+        for (i = iBegin; i < iEnd; i++) {       // render all Events if start is within rangeBox
             this.renderEvent(events[i]);
         }
 
