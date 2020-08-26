@@ -218,7 +218,9 @@ Widget.prototype = {
             bubbles: true,
             detail: new Date(this._cursor)
         } ));
-        window.sessionStorage.setItem('dateline_' + this.id, this._cursor.getTime());  // cursor into session storage
+	if (this.settings.rememberCursor)   {
+            window.sessionStorage.setItem('dateline_' + this.id, this._cursor.getTime());  // cursor into session storage
+	}
     },
 
     find: function(id) {
