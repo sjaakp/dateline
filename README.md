@@ -53,7 +53,7 @@ A minimum HTML page with a **Dateline** would look something like this:
 
 ## CDN ##
 
-**Dateline** is available on the **unpkg** BandContent Delivery Network, so you
+**Dateline** is available on the **unpkg** Content Delivery Network, so you
 don't have to host the `dateline` files on your own server. In this case,
 the minimum HTML page looks like this:
 
@@ -210,7 +210,7 @@ By means of the option `cursor` the starting value can be set.
 Like the event time options, `cursor` can be a JavaScript `Date` object 
 or a string that is recognized by `Date.parse()`.
 
-**Dateline** remembers the `cursor` value between visits tot the page, as long as they 
+**Dateline** remembers the `cursor` value between visits to the page, as long as they 
 are in one browser session. If you don't like this behavior, 
 set the `rememberCursor` option to `false`.
 
