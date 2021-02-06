@@ -1,6 +1,6 @@
 {
   "name": "@sjaakp/dateline",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Interactive widget for date-related data",
   "browser": "./dist/dateline.js",
   "files": [
