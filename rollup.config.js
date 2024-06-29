@@ -46,6 +46,7 @@ export default {
         commonjs(),
         json(),
 
+/*
         sass({
             output: true,
             // insert: true,
@@ -53,6 +54,7 @@ export default {
                 outputStyle: 'compressed'
             }
         }),
+*/
 
         buble({
              transforms: {

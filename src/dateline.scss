@@ -308,7 +308,7 @@ $dark-event-col: lightgreen;
   &.far,
   &.fas {
     &:before  {
-      font-family: "Font Awesome 5 Pro", "Font Awesome 5 Free";
+      font-family: "Font Awesome 6 Pro", "Font Awesome 6 Free", "Font Awesome 5 Pro", "Font Awesome 5 Free";
     }
   }
   &.fal:before {
@@ -322,7 +322,7 @@ $dark-event-col: lightgreen;
     font-weight: 900;
   }
   &.fab:before {
-    font-family: "Font Awesome 5 Brands";
+    font-family: "Font Awesome 6 Brands", "Font Awesome 5 Brands";
     font-weight: 400;
   }
   &.fad {
@@ -338,7 +338,7 @@ $dark-event-col: lightgreen;
     }
     &:before,
     &:after {
-      font-family: "Font Awesome 5 Duotone";
+      font-family: "Font Awesome 6 Duotone", "Font Awesome 5 Duotone";
       font-weight: 900;
     }
   }
